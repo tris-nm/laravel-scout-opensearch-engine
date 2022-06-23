@@ -121,6 +121,16 @@ class OpenSearchEngine extends Engine
      */
     protected function performSearch(Builder $builder, array $options = [], bool $skipCallback = false)
     {
+        if (count($builder->orders) > 0) {
+            foreach ($builder->orders as $order) {
+                $options['sort'][] = [
+                    $order['column'] => [
+                        'order' => $order['direction']
+                    ]
+                ];
+            }
+        }
+
         if ($builder->callback && !$skipCallback) {
             return call_user_func(
                 $builder->callback,

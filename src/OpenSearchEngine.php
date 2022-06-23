@@ -157,7 +157,7 @@ class OpenSearchEngine extends Engine
     {
         $options = [
             '_source' => true,
-            'size' => $builder->limit ? $builder->limit : 10,
+            'size' => $builder->limit ? $builder->limit : 10000,
             'from' => 0,
         ];
         $options['query'] = $this->filters($builder);

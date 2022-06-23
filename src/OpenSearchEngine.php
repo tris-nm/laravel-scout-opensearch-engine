@@ -139,7 +139,6 @@ class OpenSearchEngine extends Engine
                 $options
             );
         }
-
         $path = $this->url . '/' . $builder->model->searchableAs() . '/_search';
         $response = $this->makeRequestToCluster('post', $path, $options);
         self::errors($response);
@@ -200,16 +199,10 @@ class OpenSearchEngine extends Engine
         if ($builder->query) {
             $fields = $builder->model->searchableFields();
             $query = [
-                'bool' => [
-                    'must' => [
-                        [
-                            'simple_query_string' => [
-                                'query' => $builder->query,
-                                'fields' => $fields,
-                                'default_operator' => 'or',
-                            ]
-                        ]
-                    ]
+                'simple_query_string' => [
+                    'query' => $builder->query,
+                    'fields' => $fields,
+                    'default_operator' => 'or',
                 ]
             ];
         }
@@ -348,6 +341,7 @@ class OpenSearchEngine extends Engine
     {
         if ($response->status() != 200) {
             $data = $response->json();
+            \Log::debug($data);
             $reason = Arr::has($data, 'error.reason') ? Arr::get($data, 'error.reason') : $response->getReasonPhrase();
             return throw new Exception($reason);
         }
